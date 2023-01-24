@@ -8,31 +8,33 @@
 import Foundation
 
 
-struct IntVector: Equatable, CustomStringConvertible, IDistanceComparable {
-    let count: Int
+public struct IntVector: Equatable, CustomStringConvertible, IDistanceComparable {
+    
+    public let count: Int
+   
     let components: [Int]
     
-    var description: String {
+    public var description: String {
         let components = components
             .map({ String(format: "%0.3f", $0) })
             .joined(separator: ", ")
         return "<Vector [\(count)] \(components)>"
     }
     
-    init(dimension: Int) {
+    public init(dimension: Int) {
         self.init(Array(repeating: 0, count: dimension))
     }
     
-    init(_ components: [Int]) {
+    public init(_ components: [Int]) {
         self.components = components
         self.count = components.count
     }
     
-    subscript(index: Int) -> Int {
+    public subscript(index: Int) -> Int {
         components[index]
     }
     
-    func distanceSquared(to other: IntVector) -> Float {
+    public func distanceSquared(to other: IntVector) -> Float {
         precondition(count == other.count)
         #warning("TODO: Use Accelerate")
         var k: Int = 0
@@ -43,7 +45,7 @@ struct IntVector: Equatable, CustomStringConvertible, IDistanceComparable {
         return Float(k)
     }
     
-    func distance(to other: IntVector) -> Float {
+    public func distance(to other: IntVector) -> Float {
         #warning("TODO: Use Accelerate")
         return sqrt(Float(distanceSquared(to: other)))
     }

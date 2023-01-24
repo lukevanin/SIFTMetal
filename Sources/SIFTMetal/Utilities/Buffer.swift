@@ -9,14 +9,14 @@ import Foundation
 import Metal
 
 
-final class Buffer<T> {
+public final class Buffer<T> {
 
-    private(set) var count: Int
+    public private(set) var count: Int
     let data: MTLBuffer
     let pointer: UnsafeMutablePointer<T>
-    let capacity: Int
+    public let capacity: Int
 
-    init(device: MTLDevice, label: String, capacity: Int) {
+    public init(device: MTLDevice, label: String, capacity: Int) {
         self.capacity = capacity
         let numberOfBytes = MemoryLayout<T>.stride * capacity
         self.data = device.makeBuffer(
@@ -32,13 +32,13 @@ final class Buffer<T> {
         data.setPurgeableState(.empty)
     }
     
-    func allocate(_ count: Int) {
+    public func allocate(_ count: Int) {
         precondition(count >= 0)
         precondition(count <= capacity)
         self.count = count
     }
     
-    subscript(i: Int) -> T {
+    public subscript(i: Int) -> T {
         get {
             precondition(i >= 0)
             precondition(i < count)

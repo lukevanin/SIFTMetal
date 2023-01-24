@@ -8,9 +8,9 @@
 import Foundation
 
 
-struct SIFTCorrespondence {
+public struct SIFTCorrespondence {
 
-    var source: SIFTDescriptor
-    var target: SIFTDescriptor
-    var featureDistance: Float
+    public var source: SIFTDescriptor
+    public var target: SIFTDescriptor
+    public var featureDistance: Float
 }

@@ -8,9 +8,14 @@
 import Foundation
 
 
-struct IntegralSize {
-    var width: Int
-    var height: Int
+public struct IntegralSize {
+    public var width: Int
+    public var height: Int
+    
+    public init(width: Int, height: Int) {
+        self.width = width
+        self.height = height
+    }
 }
 
 

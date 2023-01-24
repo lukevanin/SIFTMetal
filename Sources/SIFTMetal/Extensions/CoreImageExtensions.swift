@@ -11,7 +11,7 @@ import simd
 
 
 extension CIImage {
-    func perspectiveTransformed(by matrix: simd_float3x3) -> CIImage {
+    public func perspectiveTransformed(by matrix: simd_float3x3) -> CIImage {
         let bounds = Quad(rect: extent).transformed(by: matrix)
         let filter = CIFilter.perspectiveTransform()
         filter.topLeft = CGPoint(bounds.topLeft)
@@ -22,7 +22,7 @@ extension CIImage {
         return filter.outputImage!
     }
     
-    func colorInverted() -> CIImage {
+    public func colorInverted() -> CIImage {
         let filter = CIFilter.colorInvert()
         filter.inputImage = self
         return filter.outputImage!

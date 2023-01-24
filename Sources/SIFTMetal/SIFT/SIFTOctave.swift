@@ -8,6 +8,8 @@
 import Foundation
 import Metal
 
+import MetalShaders
+
 
 struct SIFTGradient {
     

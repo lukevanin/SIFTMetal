@@ -8,19 +8,45 @@
 import Foundation
 
 
-struct SIFTKeypoint {
+public struct SIFTKeypoint {
+    
     // Index of the level of the difference-of-gaussians pyramid.
-    var octave: Int
+    public var octave: Int
+    
     // Index of the image in the octave.
-    var scale: Int
+    public var scale: Int
+    
     //
-    var subScale: Float
+    public var subScale: Float
+    
     // Coordinate relative to the difference-of-gaussians image size.
-    var scaledCoordinate: SIMD2<Int>
+    public var scaledCoordinate: SIMD2<Int>
+    
     // Coordinate relative to the original image.
-    var absoluteCoordinate: SIMD2<Float>
+    public var absoluteCoordinate: SIMD2<Float>
+    
     // "Blur"
-    var sigma: Float
+    public var sigma: Float
+    
     // Pixel color (intensity)
-    var value: Float
+    public var value: Float
+    
+    public init(
+        octave: Int,
+        scale: Int,
+        subScale: Float,
+        scaledCoordinate: SIMD2<Int>,
+        absoluteCoordinate: SIMD2<Float>,
+        sigma: Float,
+        value: Float
+    ) {
+        self.octave = octave
+        self.scale = scale
+        self.subScale = subScale
+        self.scaledCoordinate = scaledCoordinate
+        self.absoluteCoordinate = absoluteCoordinate
+        self.sigma = sigma
+        self.value = value
+    }
+
 }

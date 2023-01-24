@@ -8,8 +8,8 @@
 import Foundation
 import OSLog
 import Metal
-import MetalPerformanceShaders
 
+import MetalShaders
 
 private let logger = Logger(
     subsystem: Bundle.main.bundleIdentifier!,
@@ -49,12 +49,12 @@ private let logger = Logger(
 /// See: https://www.youtube.com/watch?v=U0wqePj4Mx0
 /// See: https://www.youtube.com/watch?v=ram-jbLJjFg&t=2s
 /// See: https://www.youtube.com/watch?v=NPcMS49V5hg
-/// See: https://github.com/robwhess/opensift/blob/master/src/sift.c
+/// See: https://github.com/robwhess/opensift
 /// See: https://medium.com/jun94-devpblog/cv-13-scale-invariant-local-feature-extraction-3-sift-315b5de72d48
 ///
-final class SIFT {
+public final class SIFT {
     
-    struct Configuration {
+    public struct Configuration {
         
         // Dimensions of the input image.
         var inputSize: IntegralSize
@@ -96,6 +96,10 @@ final class SIFT {
         // Gaussian window of lambdaDescriptor * sigma
         // Descriptor patch width of 2 * lambdaDescriptor * sigma
         var lambdaDescriptor: Float = 6
+        
+        public init(inputSize: IntegralSize) {
+            self.inputSize = inputSize
+        }
     }
 
     let configuration: Configuration
@@ -105,7 +109,7 @@ final class SIFT {
     private let device: MTLDevice
     private let commandQueue: MTLCommandQueue
     
-    init(
+    public init(
         device: MTLDevice,
         configuration: Configuration
     ) {
@@ -140,7 +144,7 @@ final class SIFT {
 
     // MARK: Keypoints
     
-    func getKeypoints(_ inputTexture: MTLTexture) -> [[SIFTKeypoint]] {
+    public func getKeypoints(_ inputTexture: MTLTexture) -> [[SIFTKeypoint]] {
         findKeypoints(inputTexture: inputTexture)
         let keypointOctaves = getKeypointsFromOctaves()
         let interpolatedKeypoints = interpolateKeypoints(keypointOctaves: keypointOctaves)
@@ -200,7 +204,7 @@ final class SIFT {
     
     // MARK: Descriptora
     
-    func getDescriptors(keypointOctaves: [[SIFTKeypoint]]) -> [[SIFTDescriptor]] {
+    public func getDescriptors(keypointOctaves: [[SIFTKeypoint]]) -> [[SIFTDescriptor]] {
         precondition(keypointOctaves.count == octaves.count)
         
         // Get all orientations for all keypoints.

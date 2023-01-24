@@ -17,10 +17,10 @@ private let logger = Logger(
 )
 
 
-final class DifferenceOfGaussians {
+public final class DifferenceOfGaussians {
     
     
-    struct Configuration {
+    public struct Configuration {
         
         // Dimensions of the original image.
         var inputDimensions: IntegralSize
@@ -44,6 +44,10 @@ final class DifferenceOfGaussians {
         // Number of gaussians per octave = scales per octave + 3.
         // Number of differences per octave = scales per octave + 2
         var numberOfScalesPerOctave: Int = 3
+        
+        public init(inputDimensions: IntegralSize) {
+            self.inputDimensions = inputDimensions
+        }
     }
     
     
@@ -226,7 +230,7 @@ final class DifferenceOfGaussians {
     private let bilinearScaleFunction: BilinearUpScaleKernel
     private let seedGaussianBlurFunction: GaussianKernel
     
-    init(device: MTLDevice, configuration: Configuration) {
+    public init(device: MTLDevice, configuration: Configuration) {
         
         let seedSize = IntegralSize(
             width: Int(Float(configuration.inputDimensions.width) / configuration.deltaMinimum),
@@ -339,7 +343,7 @@ final class DifferenceOfGaussians {
         }()
     }
     
-    func encode(
+    public func encode(
         commandBuffer: MTLCommandBuffer,
         originalTexture: MTLTexture
     ) {

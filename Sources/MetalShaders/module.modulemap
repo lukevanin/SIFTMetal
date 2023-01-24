@@ -1,0 +1,4 @@
+module Shaders {
+    header "MetalShaders.h"
+    export *
+}
