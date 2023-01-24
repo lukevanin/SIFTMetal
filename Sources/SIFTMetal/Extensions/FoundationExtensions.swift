@@ -11,7 +11,7 @@ extension Bundle {
     
     // See: https://developer.apple.com/forums/thread/649579
     static var metalShaders: Bundle {
-        let bundleURL = Bundle.main.url(forResource: "SIFTMetal_MetalShaders", withExtension: "bundle")!
+        let bundleURL = Bundle(for: SIFT.self).url(forResource: "SIFTMetal_MetalShaders", withExtension: "bundle")!
         let bundle = Bundle(url: bundleURL)!
         return bundle
     }

@@ -15,26 +15,70 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-//        .package(
-//            url: "https://github.com/schwa/MetalCompilerPlugin",
-//            branch: "main"
-//        ),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "MetalShaders",
-            resources: [.process("Metal/ConvertSRGBToGrayscale.metal")]
-//            plugins: ["https://github.com/schwa/MetalCompilerPlugin"]
+            resources: [
+                .process("Metal")
+            ]
         ),
         .target(
             name: "SIFTMetal",
-            dependencies: ["MetalShaders"]
+            dependencies: ["MetalShaders"],
+            resources: [
+                .process("Resources")
+            ],
+            swiftSettings: [
+                .unsafeFlags(["-O"])
+            ]
         ),
         .testTarget(
             name: "SIFTMetalTests",
-            dependencies: ["SIFTMetal", "MetalShaders"]
+            dependencies: ["SIFTMetal", "MetalShaders"],
+            resources: [
+                .process("Resources/butterfly.png"),
+                .process("Resources/butterfly-descriptors.txt"),
+
+                .process("Resources/extra_OnEdgeResp_butterfly.txt"),
+
+                .process("Resources/scalespace_butterfly_o000_s000.png"),
+                .process("Resources/scalespace_butterfly_o000_s001.png"),
+                .process("Resources/scalespace_butterfly_o000_s002.png"),
+                .process("Resources/scalespace_butterfly_o000_s003.png"),
+                .process("Resources/scalespace_butterfly_o000_s004.png"),
+                .process("Resources/scalespace_butterfly_o000_s005.png"),
+                
+                .process("Resources/scalespace_butterfly_o001_s000.png"),
+                .process("Resources/scalespace_butterfly_o001_s001.png"),
+                .process("Resources/scalespace_butterfly_o001_s002.png"),
+                .process("Resources/scalespace_butterfly_o001_s003.png"),
+                .process("Resources/scalespace_butterfly_o001_s004.png"),
+                .process("Resources/scalespace_butterfly_o001_s005.png"),
+                
+                .process("Resources/scalespace_butterfly_o002_s000.png"),
+                .process("Resources/scalespace_butterfly_o002_s001.png"),
+                .process("Resources/scalespace_butterfly_o002_s002.png"),
+                .process("Resources/scalespace_butterfly_o002_s003.png"),
+                .process("Resources/scalespace_butterfly_o002_s004.png"),
+                .process("Resources/scalespace_butterfly_o002_s005.png"),
+                
+                .process("Resources/scalespace_butterfly_o003_s000.png"),
+                .process("Resources/scalespace_butterfly_o003_s001.png"),
+                .process("Resources/scalespace_butterfly_o003_s002.png"),
+                .process("Resources/scalespace_butterfly_o003_s003.png"),
+                .process("Resources/scalespace_butterfly_o003_s004.png"),
+                .process("Resources/scalespace_butterfly_o003_s005.png"),
+                
+                .process("Resources/scalespace_butterfly_o004_s000.png"),
+                .process("Resources/scalespace_butterfly_o004_s001.png"),
+                .process("Resources/scalespace_butterfly_o004_s002.png"),
+                .process("Resources/scalespace_butterfly_o004_s003.png"),
+                .process("Resources/scalespace_butterfly_o004_s004.png"),
+                .process("Resources/scalespace_butterfly_o004_s005.png"),
+]
         ),
     ]
 )

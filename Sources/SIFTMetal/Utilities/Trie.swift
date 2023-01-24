@@ -8,17 +8,6 @@
 import Foundation
 
 
-protocol IDistanceComparable {
-    func distance(to other: Self) -> Float
-    func distanceSquared(to other: Self) -> Float
-}
-
-extension IDistanceComparable {
-    func distance(to other: Self) -> Float {
-        sqrt(distanceSquared(to: other))
-    }
-}
-
 ///
 /// Approximate Nearest Neighbor (ANN) Trie.
 ///
@@ -84,7 +73,9 @@ extension IDistanceComparable {
 /// The queue containing the values with the smallest distance to the key is then returned as the result of the
 /// search.
 ///
-final class Trie<Value> where Value: IDistanceComparable {
+final class Trie {
+    
+    typealias Value = SIFTDescriptor
     
     private(set) var nodeCountMetric = 0
     private(set) var comparisonCountMetric = 0

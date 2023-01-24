@@ -8,7 +8,7 @@
 import Foundation
 
 
-public struct IntVector: Equatable, CustomStringConvertible, IDistanceComparable {
+public struct IntVector: Equatable, CustomStringConvertible {
     
     public let count: Int
    
@@ -52,7 +52,7 @@ public struct IntVector: Equatable, CustomStringConvertible, IDistanceComparable
 }
 
 
-struct FloatVector: Equatable, CustomStringConvertible, IDistanceComparable {
+struct FloatVector: Equatable, CustomStringConvertible {
     let count: Int
     let components: [Float]
     

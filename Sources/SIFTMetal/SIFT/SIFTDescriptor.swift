@@ -68,7 +68,7 @@ public struct SIFTDescriptor {
     ) -> [SIFTCorrespondence] {
         var output = [SIFTCorrespondence]()
         
-        let trie = Trie<SIFTDescriptor>(numberOfBins: 8)
+        let trie = Trie(numberOfBins: 8)
         for descriptor in target {
             let key = descriptor.makeIndexKey()
             trie.insert(key: key, value: descriptor)
@@ -91,7 +91,7 @@ public struct SIFTDescriptor {
     
     static func match(
         descriptor: SIFTDescriptor,
-        target: Trie<SIFTDescriptor>,
+        target: Trie,
         absoluteThreshold: Float,
         relativeThreshold: Float
     ) -> SIFTCorrespondence? {
@@ -120,7 +120,7 @@ public struct SIFTDescriptor {
     }
 }
 
-extension SIFTDescriptor: IDistanceComparable {
+extension SIFTDescriptor {
     
     func distance(to other: SIFTDescriptor) -> Float {
         features.distance(to: other.features)
