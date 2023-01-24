@@ -52,27 +52,27 @@ public struct IntVector: Equatable, CustomStringConvertible {
 }
 
 
-struct FloatVector: Equatable, CustomStringConvertible {
-    let count: Int
-    let components: [Float]
+public struct FloatVector: Equatable, CustomStringConvertible {
+    public let count: Int
+    public let components: [Float]
     
-    var description: String {
+    public var description: String {
         let components = components
             .map({ String(format: "%0.3f", $0) })
             .joined(separator: ", ")
         return "<Vector [\(count)] \(components)>"
     }
     
-    init(_ components: [Float]) {
+    public init(_ components: [Float]) {
         self.components = components
         self.count = components.count
     }
     
-    subscript(index: Int) -> Float {
+    public subscript(index: Int) -> Float {
         components[index]
     }
     
-    func distanceSquared(to other: FloatVector) -> Float {
+    public func distanceSquared(to other: FloatVector) -> Float {
         precondition(count == other.count)
         #warning("TODO: Use Accelerate")
         var k: Float = 0
@@ -83,7 +83,7 @@ struct FloatVector: Equatable, CustomStringConvertible {
         return k
     }
     
-    func distance(to other: FloatVector) -> Float {
+    public func distance(to other: FloatVector) -> Float {
         #warning("TODO: Use Accelerate")
         return sqrt(distanceSquared(to: other))
     }

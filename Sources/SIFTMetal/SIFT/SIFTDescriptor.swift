@@ -27,12 +27,12 @@ public struct SIFTDescriptor {
         self.features = features
     }
 
-    func rawFeatures() -> FloatVector {
+    public func rawFeatures() -> FloatVector {
         let components = features.components.map { Float($0) / Float(255) }
         return FloatVector(components)
     }
     
-    func makeIndexKey() -> FloatVector {
+    public func makeIndexKey() -> FloatVector {
         let count = 8
         let features = rawFeatures()
         let v = stride(from: 0, to: features.count, by: count)

@@ -73,9 +73,9 @@ import Foundation
 /// The queue containing the values with the smallest distance to the key is then returned as the result of the
 /// search.
 ///
-final class Trie {
+public final class Trie {
     
-    typealias Value = SIFTDescriptor
+    public typealias Value = SIFTDescriptor
     
     private(set) var nodeCountMetric = 0
     private(set) var comparisonCountMetric = 0
@@ -93,20 +93,20 @@ final class Trie {
     private var rightNode: Trie!
     private var leftNode: Trie!
     
-    convenience init(numberOfBins: Int) {
+    public convenience init(numberOfBins: Int) {
         self.init(nodes: Array<Trie?>(repeating: nil, count: numberOfBins))
     }
     
-    convenience init(_ nodes: Trie?...) {
+    public convenience init(_ nodes: Trie?...) {
         self.init(nodes: nodes)
     }
     
-    init(nodes: [Trie?]) {
+    public init(nodes: [Trie?]) {
         self.numberOfBins = nodes.count
         self.nodes = nodes
     }
     
-    func capacity() -> Int {
+    public func capacity() -> Int {
         var total = values.count
         for node in nodes {
             if let node {
@@ -116,7 +116,7 @@ final class Trie {
         return total
     }
     
-    func link() {
+    public func link() {
         let nodes = self.leaves()
         for i in 0 ..< nodes.count {
             let thisNode = nodes[i]
@@ -157,7 +157,7 @@ final class Trie {
         return leaves
     }
 
-    func insert(key: FloatVector, value: Value) {
+    public func insert(key: FloatVector, value: Value) {
         insert(key: ArraySlice(key.components), value: value)
     }
     
@@ -195,7 +195,7 @@ final class Trie {
         //        }
     }
     
-    func contains(_ key: FloatVector) -> Bool {
+    public func contains(_ key: FloatVector) -> Bool {
         return contains(ArraySlice(key.components))
     }
 
@@ -215,22 +215,22 @@ final class Trie {
         return node.contains(suffix)
     }
     
-    struct Match {
-        var value: Value
-        var distance: Float
+    public struct Match {
+        public var value: Value
+        public var distance: Float
     }
     
-    class FiniteQueue<T> {
+    public class FiniteQueue<T> {
         
-        var first: T? {
+        public var first: T? {
             values.first
         }
         
-        var count: Int {
+        public var count: Int {
             values.count
         }
         
-        let capacity: Int
+        public let capacity: Int
         
         private var values: [T] = []
         
@@ -238,7 +238,7 @@ final class Trie {
             self.capacity = capacity
         }
         
-        subscript(index: Int) -> T {
+        public subscript(index: Int) -> T {
             values[index]
         }
         
@@ -292,7 +292,7 @@ final class Trie {
 //        return nil
 //    }
     
-    func nearest(key: FloatVector, query: Value, radius: Int, k: Int) -> FiniteQueue<Match> {
+    public func nearest(key: FloatVector, query: Value, radius: Int, k: Int) -> FiniteQueue<Match> {
         nodeCountMetric = 0
         comparisonCountMetric = 0
        
@@ -417,7 +417,7 @@ final class Trie {
 
 extension Trie: Equatable {
     
-    static func ==(lhs: Trie, rhs: Trie) -> Bool {
+    public static func ==(lhs: Trie, rhs: Trie) -> Bool {
         lhs.numberOfBins == rhs.numberOfBins &&
         lhs.nodes == rhs.nodes
     }
