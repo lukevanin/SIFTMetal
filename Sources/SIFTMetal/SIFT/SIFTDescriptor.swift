@@ -63,8 +63,8 @@ public struct SIFTDescriptor {
     public static func match(
         source: [SIFTDescriptor],
         target: [SIFTDescriptor],
-        absoluteThreshold: Float,
-        relativeThreshold: Float
+        absoluteThreshold: Float = 300,
+        relativeThreshold: Float = 0.6
     ) -> [SIFTCorrespondence] {
         var output = [SIFTCorrespondence]()
         
@@ -89,11 +89,11 @@ public struct SIFTDescriptor {
         return output
     }
     
-    static func match(
+    public static func match(
         descriptor: SIFTDescriptor,
         target: Trie,
-        absoluteThreshold: Float,
-        relativeThreshold: Float
+        absoluteThreshold: Float = 300,
+        relativeThreshold: Float = 0.6
     ) -> SIFTCorrespondence? {
         let key = descriptor.makeIndexKey()
         let matches = target.nearest(key: key, query: descriptor, radius: 10, k: 2)

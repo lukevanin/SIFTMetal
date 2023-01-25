@@ -53,9 +53,10 @@ final class KeypointTests: SharedTestCase {
 //            keypoints[i] = keypoint
 //        }
 
+        let renderer = SIFTRenderer()
         attachImage(
             name: "keypoints",
-            uiImage: drawKeypoints(
+            uiImage: renderer.drawKeypoints(
                 sourceImage: referenceImage,
                 referenceKeypoints: referenceKeypoints,
                 foundKeypoints: keypoints

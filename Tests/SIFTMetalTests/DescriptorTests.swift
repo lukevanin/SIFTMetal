@@ -45,9 +45,10 @@ final class DescriptorTests: SharedTestCase {
             return cgImage
         }()
 
+        let renderer = SIFTRenderer()
         attachImage(
             name: "descriptors",
-            uiImage: drawDescriptors(
+            uiImage: renderer.drawDescriptors(
                 sourceImage: referenceImage,
                 referenceDescriptors: referenceDescriptors,
                 foundDescriptors: foundDescriptors
@@ -67,7 +68,7 @@ final class DescriptorTests: SharedTestCase {
         let subject = SIFT(device: device, configuration: configuration)
         measure {
             let keypoints = subject.getKeypoints(inputTexture)
-            let descriptorOctaves = subject.getDescriptors(keypointOctaves: keypoints)
+            _ = subject.getDescriptors(keypointOctaves: keypoints)
         }
     }
     
@@ -126,9 +127,10 @@ final class DescriptorTests: SharedTestCase {
         print("Found \(matches.count) matches")
 
         print("drawing matches")
+        let renderer = SIFTRenderer()
         attachImage(
             name: "matches",
-            uiImage: drawMatches(
+            uiImage: renderer.drawMatches(
                 sourceImage: referenceImage,
                 targetImage: referenceImage,
                 matches: matches

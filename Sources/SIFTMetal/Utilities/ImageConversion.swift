@@ -11,11 +11,11 @@ import CoreVideo
 import Metal
 
 
-final class ImageConversion {
+public final class ImageConversion {
     
     private let ciContext: CIContext
     
-    init(device: MTLDevice, colorSpace: CGColorSpace) {
+    public init(device: MTLDevice, colorSpace: CGColorSpace) {
         self.ciContext = CIContext(
             mtlDevice: device,
             options: [
@@ -26,7 +26,7 @@ final class ImageConversion {
         )
     }
 
-    func makeCGImage(_ input: CVImageBuffer) -> CGImage {
+    public func makeCGImage(_ input: CVImageBuffer) -> CGImage {
         let ciImage = CIImage(
             cvPixelBuffer: input,
             options: [.applyOrientationProperty: true]
@@ -34,12 +34,12 @@ final class ImageConversion {
         return makeCGImage(ciImage)
     }
     
-    func makeCGImage(_ input: MTLTexture) -> CGImage {
+    public func makeCGImage(_ input: MTLTexture) -> CGImage {
         let ciImage = CIImage(mtlTexture: input)!
         return makeCGImage(ciImage)
     }
     
-    func makeCGImage(_ input: CIImage) -> CGImage {
+    public func makeCGImage(_ input: CIImage) -> CGImage {
         let output = input.transformed(by: input.orientationTransform(for: .downMirrored))
         return ciContext.createCGImage(output, from: output.extent)!
     }

@@ -199,7 +199,6 @@ final class SIFTOctave {
         let numberOfKeypoints = extremaFunction.indexBuffer[0]
         extremaFunction.indexBuffer[0] = 0
         extremaOutputBuffer.allocate(Int(numberOfKeypoints))
-        print("getKeypoints: \(numberOfKeypoints)")
         return extremaOutputBuffer
     }
     
@@ -280,7 +279,6 @@ final class SIFTOctave {
     }
     
     func getKeypointOrientations(commandQueue: MTLCommandQueue, keypoints: [SIFTKeypoint]) -> [SIFTKeypointOrientations] {
-        print("getKeypointOrientations")
         
         orientationInputBuffer.allocate(keypoints.count)
         orientationOutputBuffer.allocate(keypoints.count)
@@ -351,9 +349,7 @@ final class SIFTOctave {
             
             commandBuffer.commit()
             commandBuffer.waitUntilCompleted()
-            let elapsedTime = commandBuffer.gpuEndTime - commandBuffer.gpuStartTime
-            print("getKeypointOrientations: Command buffer \(String(format: "%0.4f", elapsedTime)) seconds")
-        }        
+        }
 
         //
         var output = [SIFTKeypointOrientations]()
@@ -373,8 +369,6 @@ final class SIFTOctave {
             )
             output.append(item)
         }
-        let totalOrientations = output.reduce(into: 0) { $0 += $1.orientations.count }
-        print("getKeypointOrientations: \(totalOrientations) orientations")
         return output
     }
     
@@ -460,9 +454,8 @@ final class SIFTOctave {
         
         commandBuffer.commit()
         commandBuffer.waitUntilCompleted()
-//        captureManager.stopCapture()
         let elapsedTime = commandBuffer.gpuEndTime - commandBuffer.gpuStartTime
-        print("getDescriptors: Command buffer \(String(format: "%0.4f", elapsedTime)) seconds")
+//        print("getDescriptors: Command buffer \(String(format: "%0.4f", elapsedTime)) seconds")
 
         //
         let numberOfFeatures = 128
@@ -485,7 +478,7 @@ final class SIFTOctave {
             )
             output.append(descriptor)
         }
-        print("getDescriptors: \(output.count) descriptors")
+//        print("getDescriptors: \(output.count) descriptors")
         return output
     }
 }
