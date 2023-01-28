@@ -22,6 +22,7 @@ public struct SIFTDescriptor {
         theta: Float,
         features: IntVector
     ) {
+        precondition(features.count > 0)
         self.keypoint = keypoint
         self.theta = theta
         self.features = features

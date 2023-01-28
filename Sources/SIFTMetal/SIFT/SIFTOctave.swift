@@ -203,6 +203,11 @@ final class SIFTOctave {
     }
     
     func interpolateKeypoints(commandQueue: MTLCommandQueue, keypoints: Buffer<SIFTExtremaResult>) -> [SIFTKeypoint] {
+        
+        guard keypoints.count > 0 else {
+            return []
+        }
+        
         let sigmaRatio = scale.sigmas[1] / scale.sigmas[0]
         
         interpolateInputBuffer.allocate(keypoints.count)
