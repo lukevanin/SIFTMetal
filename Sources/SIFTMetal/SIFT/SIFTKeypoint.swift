@@ -24,7 +24,10 @@ public struct SIFTKeypoint {
     
     // Coordinate relative to the original image.
     public var absoluteCoordinate: SIMD2<Float>
-    
+
+    // Coordinate relative to the normal space (0...1, 0...1)
+    public var normalizedCoordinates: SIMD2<Float>
+
     // "Blur"
     public var sigma: Float
     
@@ -37,6 +40,7 @@ public struct SIFTKeypoint {
         subScale: Float,
         scaledCoordinate: SIMD2<Int>,
         absoluteCoordinate: SIMD2<Float>,
+        normalizedCoordinates: SIMD2<Float>,
         sigma: Float,
         value: Float
     ) {
@@ -45,6 +49,7 @@ public struct SIFTKeypoint {
         self.subScale = subScale
         self.scaledCoordinate = scaledCoordinate
         self.absoluteCoordinate = absoluteCoordinate
+        self.normalizedCoordinates = normalizedCoordinates
         self.sigma = sigma
         self.value = value
     }

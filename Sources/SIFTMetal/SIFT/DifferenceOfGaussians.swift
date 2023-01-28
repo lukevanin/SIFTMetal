@@ -38,7 +38,7 @@ public final class DifferenceOfGaussians {
         
         // Number of octaves (limited by the image size )).
         // ⌊log2(min(w, h) / deltaMin / 12) + 1⌋
-        var numberOfOctaves: Int = 5
+        var numberOfOctaves: Int = 7
         
         // Number of scales per octave.
         // Number of gaussians per octave = scales per octave + 3.

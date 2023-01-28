@@ -275,6 +275,10 @@ final class SIFTOctave {
                     x: p.absoluteX,
                     y: p.absoluteY
                 ),
+                normalizedCoordinates: SIMD2<Float>(
+                    x: Float(p.relativeX) / Float(scale.size.width),
+                    y: Float(p.relativeY) / Float(scale.size.height)
+                ),
                 sigma: scale.sigmas[Int(p.scale)] * pow(sigmaRatio, p.subScale),
                 value: p.value
             )
