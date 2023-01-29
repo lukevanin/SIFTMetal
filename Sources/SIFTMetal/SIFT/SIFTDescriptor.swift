@@ -107,24 +107,24 @@ public struct SIFTDescriptor {
         absoluteThreshold: Float = 1.176,
         relativeThreshold: Float = 0.6
     ) -> Float {
-        let minimumSampleSize = 5
-        let maximumSampleSize = 20
-//        let sampleRatio: Float = 0.05
+//        let sampleLimit = 10
+//        let sampleRatio: Float = 0.10
 //        let maximumMatches = min(source.count, target.count)
-//        let sampleSize = Int(Float(maximumMatches) * sampleRatio)
-//        guard sampleSize >= minimumSampleSize else {
-//            print("matchGeometry: rejected: Not enough samples: \(sampleSize) out of \(minimumSampleSize)")
+//        let minimumSampleSize = max(Int(Float(maximumMatches) * sampleRatio), sampleLimit)
+        let minimumSampleSize = 7
+        let maximumSampleSize = max(minimumSampleSize, 80)
+//        guard minimumSampleSize >= sampleLimit else {
+//            print("matchGeometry: rejected: Not enough samples: \(minimumSampleSize) out of \(sampleLimit)")
 //            return 0
 //        }
-//        let minimumMatchRatio: Float = 0.1
-        guard source.count >= minimumSampleSize else {
-            print("matchGeometry: rejected: Not enough source samples: \(source.count) out of \(minimumSampleSize)")
-            return 0
-        }
-        guard target.count >= minimumSampleSize else {
-            print("matchGeometry: rejected: Not enough target samples: \(target.count) out of \(minimumSampleSize)")
-            return 0
-        }
+//        guard source.count >= minimumSampleSize else {
+//            print("matchGeometry: rejected: Not enough source samples: \(source.count) out of \(minimumSampleSize)")
+//            return 0
+//        }
+//        guard target.count >= minimumSampleSize else {
+//            print("matchGeometry: rejected: Not enough target samples: \(target.count) out of \(minimumSampleSize)")
+//            return 0
+//        }
         let matches = match(source: source, target: target, absoluteThreshold: absoluteThreshold, relativeThreshold: relativeThreshold)
         guard matches.count >= minimumSampleSize else {
             print("matchGeometry: rejected: Not enough matches: \(matches.count) out of \(minimumSampleSize)")
@@ -135,11 +135,10 @@ public struct SIFTDescriptor {
 //            print("matchGeometry: rejected: Source match ratio too low: \(matchRatio) out of \(minimumMatchRatio )")
 //            return 0
 //        }
-//        let sample = matches.prefix(maximumSampleSize)
+        let sample = Array(matches.prefix(maximumSampleSize))
         return compareGeometry(
-            matches: matches,
-            minimumSampleSize: minimumSampleSize,
-            maximumSampleSize: maximumSampleSize
+            matches: sample,
+            minimumSampleSize: minimumSampleSize
         )
     }
     
@@ -163,22 +162,21 @@ public struct SIFTDescriptor {
     
     private static func compareGeometry(
         matches: [SIFTCorrespondence],
-        minimumSampleSize: Int,
-        maximumSampleSize: Int
+        minimumSampleSize: Int
     ) -> Float {
         
-        print("compareGeometry: Samples = \(matches.count)")
+        print("compareGeometry:", "samples", matches.count, "minimum samples", minimumSampleSize)
         
-        let minimumLength: Float = 5
+        let minimumLength: Float = 2
 
         var sum: Float = 0
         var count: Int = 0
         var scores: [Float] = []
-        for i in stride(from: 0, to: matches.count - 2, by: 1) {
+        for i in stride(from: 0, to: matches.count - 3, by: 1) {
             
-            guard count < maximumSampleSize else {
-                break
-            }
+//            if count >= minimumSampleSize {
+//                break
+//            }
 
             let m0 = matches[i + 0]
             let m1 = matches[i + 1]
@@ -200,8 +198,8 @@ public struct SIFTDescriptor {
             let sourceBaseNormal = simd_normalize(sourceBase)
             let targetBaseNormal = simd_normalize(targetBase)
 
-            let m2 = matches[i + 1]
-            let m3 = matches[i + 2]
+            let m2 = matches[i + 2]
+            let m3 = matches[i + 3]
             let sourceTest = makeCoordinate(m3.source.keypoint) - makeCoordinate(m2.source.keypoint)
             let targetTest = makeCoordinate(m3.target.keypoint) - makeCoordinate(m2.target.keypoint)
 
