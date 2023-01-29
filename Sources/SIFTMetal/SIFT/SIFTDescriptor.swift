@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import simd
 
 
 public struct SIFTDescriptor {
@@ -98,6 +99,145 @@ public struct SIFTDescriptor {
 //            t += (d * d)
 //        }
 //        return sqrt(Float(t))
+    }
+    
+    public static func matchGeometry(
+        source: [SIFTDescriptor],
+        target: [SIFTDescriptor],
+        absoluteThreshold: Float = 1.176,
+        relativeThreshold: Float = 0.6
+    ) -> Float {
+        let sampleSize = 10
+        let matchRatio: Float = 0.05
+        guard source.count >= sampleSize else {
+            print("matchGeometry: rejected: Not enough source samples: \(source.count) out of \(sampleSize)")
+            return 0
+        }
+        guard target.count >= sampleSize else {
+            print("matchGeometry: rejected: Not enough target samples: \(target.count) out of \(sampleSize)")
+            return 0
+        }
+        let matches = match(source: source, target: target, absoluteThreshold: absoluteThreshold, relativeThreshold: relativeThreshold)
+        let sourceMatchRatio = Float(matches.count) / Float(source.count)
+        let targetMatchRatio = Float(matches.count) / Float(target.count)
+        guard matches.count >= sampleSize else {
+            print("matchGeometry: rejected: Not enough matches: \(matches.count) out of \(sampleSize)")
+            return 0
+        }
+        guard sourceMatchRatio >= matchRatio else {
+            print("matchGeometry: rejected: Source match ratio too low: \(sourceMatchRatio) out of \(matchRatio)")
+            return 0
+        }
+        guard targetMatchRatio >= matchRatio else {
+            print("matchGeometry: rejected: Target match ratio too low: \(targetMatchRatio) out of \(matchRatio)")
+            return 0
+        }
+        let sample = matches.shuffled().prefix(sampleSize)
+        return compareGeometry(matches: Array(sample))
+    }
+    
+    private static func compareGeometry(
+        matches: [SIFTCorrespondence]
+    ) -> Float {
+        
+        print("compareGeometry: Matches \(matches.count)")
+
+        var sum: Float = 0
+        var count: Int = 0
+        var scores: [Float] = []
+        for i in stride(from: 0, to: matches.count - 4, by: 2) {
+
+            let m0 = matches[i + 0]
+            let m1 = matches[i + 1]
+            
+            let sourceBase = m1.source.keypoint.absoluteCoordinate - m0.source.keypoint.absoluteCoordinate
+            let targetBase = m1.target.keypoint.absoluteCoordinate - m0.target.keypoint.absoluteCoordinate
+            
+            let sourceBaseLength = simd_length(sourceBase)
+            let targetBaseLength = simd_length(targetBase)
+
+            let sourceBaseNormal = simd_normalize(sourceBase)
+            let targetBaseNormal = simd_normalize(targetBase)
+            
+            guard sourceBaseLength > 0.001 else {
+                continue
+            }
+            
+            guard targetBaseLength > 0.001 else {
+                continue
+            }
+
+            let m2 = matches[i + 2]
+            let m3 = matches[i + 3]
+            let sourceTest = m3.source.keypoint.absoluteCoordinate - m2.source.keypoint.absoluteCoordinate
+            let targetTest = m3.target.keypoint.absoluteCoordinate - m2.target.keypoint.absoluteCoordinate
+
+            let sourceTestLength = simd_length(sourceTest)
+            let targetTestLength = simd_length(targetTest)
+            
+            let sourceTestNormal = simd_normalize(sourceTest)
+            let targetTestNormal = simd_normalize(targetTest)
+            
+            guard sourceTestLength > 0.001 else {
+                continue
+            }
+            
+            guard targetTestLength > 0.001 else {
+                continue
+            }
+
+            let sourceRatio = sourceTestLength / sourceBaseLength
+            let targetRatio = targetTestLength / targetBaseLength
+
+            let sourceDotProduct = simd_clamp((simd_dot(sourceTestNormal, sourceBaseNormal) * 0.5) + 0.5, 0, 1)
+            let targetDotProduct = simd_clamp((simd_dot(targetTestNormal, targetBaseNormal) * 0.5) + 0.5, 0, 1)
+            
+            precondition(sourceDotProduct >= 0)
+            precondition(sourceDotProduct <= 1)
+            precondition(targetDotProduct >= 0)
+            precondition(targetDotProduct <= 1)
+
+            let orientationSimilarity = sourceDotProduct * targetDotProduct
+            precondition(orientationSimilarity >= 0)
+            precondition(orientationSimilarity <= 1)
+
+            let scaleSimilarity: Float
+            if sourceRatio < targetRatio {
+                scaleSimilarity = simd_clamp(sourceRatio / targetRatio, 0, 1)
+            }
+            else {
+                scaleSimilarity = simd_clamp(targetRatio / sourceRatio, 0, 1)
+            }
+            precondition(scaleSimilarity >= 0)
+            precondition(scaleSimilarity <= 1)
+
+//            let score = orientationSimilarity * scaleSimilarity
+//            let similarity = score * score
+            let score = orientationSimilarity
+            scores.append(score)
+            sum += score
+            count += 1
+        }
+        
+        let mean = sum / Float(count)
+        
+        var error: Float = 0
+        for score in scores {
+            let delta = score - mean
+            error += (delta * delta)
+        }
+        let variance = error / Float(count - 1)
+        let standardDeviation = sqrt(variance)
+        
+        var zscores: [Float] = []
+        for score in scores {
+            let zscore = abs((score - mean) / standardDeviation)
+            zscores.append(zscore)
+        }
+        
+        print("compareGeometry", "count", count, "mean", mean, "variance", variance, "standard deviation", standardDeviation, "scores", scores, "zscores", zscores)
+        
+        return mean
     }
     
     public static func match(
